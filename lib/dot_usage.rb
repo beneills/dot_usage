@@ -1,36 +1,9 @@
 require 'yaml'
 
+require "dot_usage/markdown"
 require "dot_usage/version"
 
 module DotUsage
-  class MarkdownFile
-    def initialize(filename)
-      @filename = filename
-      @contents = File.read filename
-    end
-
-    def section(heading)
-      after_heading_regexp = /^#{heading}$(?<after>.+)/m
-      next_heading_regexp = /(?<section>.+)^#+/m
-
-      after_match_data = after_heading_regexp.match @contents
-      raise unless after_match_data
-
-      after_heading = after_match_data[:after]
-
-      before_match_data = next_heading_regexp.match after_heading
-      raise unless before_match_data
-
-      @before_match_data[:section]
-    end
-
-    def snippet(heading)
-      # TODO actually get snippet
-
-      section heading
-    end
-  end
-
   class DotUsageFile
     def initialize(filename)
       @filename = filename
@@ -53,7 +26,7 @@ module DotUsage
 
         md = MarkdownFile.new content.keys.first
 
-        md.snippet content.keys.first
+        md.snippet content.values.first
       else
         raise
       end
