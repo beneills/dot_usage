@@ -1,0 +1,109 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+require 'optparse'
+require 'optparse/time'
+require 'ostruct'
+require 'pp'
+
+require 'dot_usage'
+
+DEFAULT_DOT_USAGE_FILE = '.usage.yml'
+EXAMPLE_FILE = 'data/example.usage.yml'
+
+class DotUsageOptparse
+
+  #
+  # Return a structure describing the options after consuming some of args.
+  #
+  def self.parse(args)
+    # The options specified on the command line will be collected in *options*.
+    # We set default values here.
+    options = OpenStruct.new
+    options.file = DEFAULT_DOT_USAGE_FILE
+    options.yes = false
+    options.verbose = false
+
+    opt_parser = OptionParser.new do |opts|
+      opts.banner = "Usage: dot_usage [TARGET [options]]"
+
+      opts.separator ""
+      opts.separator "Specific options:"
+
+      opts.on("-f", "--file FILE",
+              "Use a custom dot_usage file") do |f|
+        options.file = f
+      end
+
+      opts.on("-y", "--yes", "Run target blindly without prompting") do |v|
+        options.yes = v
+      end
+
+      opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+        options.verbose = v
+      end
+
+      opts.separator ""
+      opts.separator "Common options:"
+
+      opts.on_tail("-h", "--help", "Show this message") do
+        puts opts
+        exit
+      end
+
+      opts.on_tail("--version", "Show version") do
+        puts ::Version.join('.')
+        exit
+      end
+    end
+
+    opt_parser.parse!(args)
+    options
+  end
+end
+
+#
+# Generate a dotfile in current directory.
+#
+def generate(options)
+  # Check for existing dotfile
+  raise "#{DEFAULT_DOT_USAGE_FILE} already exists!" if File.exists? DEFAULT_DOT_USAGE_FILE
+
+  # Generate
+  FileUtils.copy(EXAMPLE_FILE, DEFAULT_DOT_USAGE_FILE)
+
+  0
+end
+
+#
+# Run a given target
+#
+def run_target(target, options)
+  puts "Running #{target}..."
+
+  # TODO
+
+  0
+end
+
+#
+# Main entry point.
+#
+def main
+  options = DotUsageOptparse.parse(ARGV)
+
+  ret = case ARGV.length
+  when 0
+    generate(options)
+  when 1
+    target = ARGV.pop
+    run_target(target, options)
+  else
+    puts 'bad'
+    1
+  end
+
+  exit ret
+end
+
+main

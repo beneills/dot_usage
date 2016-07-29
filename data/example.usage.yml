@@ -1,0 +1,15 @@
+install:
+  - echo "Installing..."
+  - echo "Installed blah."
+
+build:
+  - echo "Building..."
+
+test:
+  - echo "Testing..."
+
+help:
+  - echo "Getting help..."
+
+#other:
+#  README.md: "##Other"
