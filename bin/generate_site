@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "---\n---\n\n<link rel=\"stylesheet\" type=\"text/css\" href=\"site/css/modest.css\">" > index.md
+cat README.md >> index.md
