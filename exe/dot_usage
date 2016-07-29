@@ -77,7 +77,10 @@ end
 #
 def generate(options)
   # Check for existing dotfile
-  raise "#{DEFAULT_DOT_USAGE_FILE} already exists!" if File.exists? DEFAULT_DOT_USAGE_FILE
+  if File.exists? DEFAULT_DOT_USAGE_FILE
+    STDERR.puts "#{DEFAULT_DOT_USAGE_FILE} already exists!"
+    return 1
+  end
 
   FileUtils.copy EXAMPLE_FILE, DEFAULT_DOT_USAGE_FILE
 

@@ -10,6 +10,21 @@ title: dot_usage
 description: a file format and utility to control building, running and testing source code
 github_username: beneills
 
+exclude:
+ - bin
+ - data
+ - exe
+ - lib
+ - test
+ - Gemfile
+ - Gemfile.lock
+ - README.md
+ - Rakefile
+ - dot_usage.gemspec
+
+include:
+ - index.md
+
 # Build settings
 markdown: kramdown
 highlighter: rouge

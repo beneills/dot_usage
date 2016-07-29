@@ -11,18 +11,19 @@ class MarkdownFile
     next_heading_regexp = /(?<section>.+)^#+/m
 
     after_match_data = after_heading_regexp.match @contents
-    raise unless after_match_data
+    return nil unless after_match_data
 
     after_heading = after_match_data[:after]
 
     before_match_data = next_heading_regexp.match after_heading
-    raise unless before_match_data
+    return nil unless before_match_data
 
     before_match_data[:section]
   end
 
   def snippet(heading)
     s = section heading
+    return nil if s.nil?
 
     [extract_quoted_snippet(s), extract_indented_snippet(s)].select { |r| ! r.nil? }.first
   end
@@ -37,7 +38,7 @@ class MarkdownFile
 
     match_data = quoted_snipped_regexp.match(section)
 
-    if match_data and match_data[:quoted_snippet]
+    if match_data
       match_data[:quoted_snippet].strip.split "\n"
     else
       nil
@@ -52,7 +53,7 @@ class MarkdownFile
 
     match_data = indentation_regexp.match(section)
 
-    if match_data and match_data[:after]
+    if match_data
       match_data[:after].lines.take_while { |line| line.strip.empty? or line.start_with? INDENTATION }.map { |l| l.strip }.select { |l| ! l.empty?}
     else
       nil

@@ -23,13 +23,19 @@ module DotUsage
       elsif content.instance_of? String
         [content]
       elsif content.instance_of? Hash
-        raise unless 1 == content.length
+        unless 1 == content.length
+          STDERR.puts content
+          STDERR.puts 'Error: hash may only have one entry!'
+          return 1
+        end
 
         md = MarkdownFile.new content.keys.first
 
         md.snippet content.values.first
       else
-        raise
+        STDERR.puts content
+        STDERR.puts 'Error: invalid recipe!'
+        1
       end
     end
   end
@@ -49,7 +55,10 @@ module DotUsage
       recipe(options).each do |cmd|
         status = Command.new(cmd).run(options)
 
-        raise 'command failed' unless status
+        unless status
+          STDERR.puts '> Command failed.  Aborting!'
+          return 1
+        end
       end
 
       0
@@ -90,14 +99,15 @@ module DotUsage
       when "n", "N", "no"
         false
       else
-        raise
+        STDERR.puts '> Invalid choice!'
+        false
       end
 
       if go
         execute @cmd
       else
         puts "Quitting!"
-        # TODO
+        1
       end
     end
   end

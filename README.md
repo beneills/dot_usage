@@ -1,4 +1,4 @@
-# dot_usage
+# [dot_usage](https://beneills.github.io/dot_usage/)
 
 _a file format and utility to control building, running and testing source code_
 
