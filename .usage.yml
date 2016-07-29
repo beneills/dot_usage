@@ -1,0 +1,10 @@
+install:
+  - gem install dot_usage
+
+build: bin/setup
+
+test:
+  - rake test
+
+help:
+  README.md: "## Getting Help"

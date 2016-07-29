@@ -14,7 +14,7 @@ test:
   - rake test
 
 help:
-  README.md: "##Getting Help"
+  README.md: "## Getting Help"
 ```
 
 2) Then your users can safely __execute__ the targets:
