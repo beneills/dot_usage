@@ -7,6 +7,7 @@ require 'ostruct'
 require 'pp'
 
 require 'dot_usage'
+require 'dot_usage/version'
 
 DEFAULT_DOT_USAGE_FILE = '.usage.yml'
 EXAMPLE_FILE = 'data/example.usage.yml'
@@ -52,12 +53,12 @@ class DotUsageOptparse
       end
 
       opts.on_tail("--version", "Show version") do
-        puts ::Version.join('.')
+        puts DotUsage::VERSION
         exit
       end
     end
 
-    opt_parser.parse!(args)
+    opt_parser.parse! args
     options
   end
 end
@@ -70,7 +71,7 @@ def generate(options)
   raise "#{DEFAULT_DOT_USAGE_FILE} already exists!" if File.exists? DEFAULT_DOT_USAGE_FILE
 
   # Generate
-  FileUtils.copy(EXAMPLE_FILE, DEFAULT_DOT_USAGE_FILE)
+  FileUtils.copy EXAMPLE_FILE, DEFAULT_DOT_USAGE_FILE
 
   0
 end
@@ -81,9 +82,7 @@ end
 def run_target(target, options)
   puts "Running #{target}..."
 
-  # TODO
-
-  0
+  DotUsage.run_target target, options
 end
 
 #
@@ -94,10 +93,10 @@ def main
 
   ret = case ARGV.length
   when 0
-    generate(options)
+    generate options
   when 1
     target = ARGV.pop
-    run_target(target, options)
+    run_target target, options
   else
     puts 'bad'
     1
