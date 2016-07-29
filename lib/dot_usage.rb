@@ -1,3 +1,4 @@
+require 'open3'
 require 'yaml'
 
 require "dot_usage/markdown"
@@ -46,7 +47,9 @@ module DotUsage
 
     def run(options)
       recipe(options).each do |cmd|
-        Command.new(cmd).run(options)
+        status = Command.new(cmd).run(options)
+
+        raise 'command failed' unless status
       end
 
       0
@@ -68,10 +71,14 @@ module DotUsage
 
     private
 
+    def execute(cmd)
+      system cmd
+    end
+
     def run_without_prompt(options)
       puts "> Running `#{@cmd}`"
 
-      `#{@cmd}`
+      execute @cmd
     end
 
     def run_with_prompt(options)
@@ -87,7 +94,7 @@ module DotUsage
       end
 
       if go
-        `#{@cmd}`
+        execute @cmd
       else
         puts "Quitting!"
         # TODO
