@@ -65,11 +65,14 @@ module DotUsage
       @name = name
     end
 
-    def run(options)
+    def recipe(options)
       file = DotUsageFile.new(options.file)
-      recipe = file.recipe @name
 
-      recipe.each do |cmd|
+      file.recipe @name
+    end
+
+    def run(options)
+      recipe(options).each do |cmd|
         Command.new(cmd).run(options)
       end
 
@@ -117,6 +120,26 @@ module DotUsage
         # TODO
       end
     end
+  end
+
+  #
+  # List targets
+  #
+  def self.list_targets(options)
+    file = DotUsageFile.new options.file
+
+    puts "Available targets:"
+    file.targets.each do |target|
+      puts " - #{target}"
+
+      if options.verbose
+        Target.new(target).recipe(options).each do |cmd|
+          puts "     `#{cmd}`"
+        end
+      end
+    end
+
+    0
   end
 
   #

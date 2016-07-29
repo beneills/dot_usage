@@ -64,14 +64,24 @@ class DotUsageOptparse
 end
 
 #
+# List targets in current directory.
+#
+def list(options)
+  DotUsage.list_targets options
+
+  0
+end
+
+#
 # Generate a dotfile in current directory.
 #
 def generate(options)
   # Check for existing dotfile
   raise "#{DEFAULT_DOT_USAGE_FILE} already exists!" if File.exists? DEFAULT_DOT_USAGE_FILE
 
-  # Generate
   FileUtils.copy EXAMPLE_FILE, DEFAULT_DOT_USAGE_FILE
+
+  puts "Generated #{DEFAULT_DOT_USAGE_FILE}"
 
   0
 end
@@ -80,8 +90,6 @@ end
 # Run a given target
 #
 def run_target(target, options)
-  puts "Running #{target}..."
-
   DotUsage.run_target target, options
 end
 
@@ -93,7 +101,11 @@ def main
 
   ret = case ARGV.length
   when 0
-    generate options
+    if File.exists? options.file
+      list options
+    else
+      generate options
+    end
   when 1
     target = ARGV.pop
     run_target target, options
